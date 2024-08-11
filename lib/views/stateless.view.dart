@@ -39,8 +39,9 @@ abstract class StatelessViewWithSharedVm<S extends ViewModel>
           },
         ),
       );
-    } else {}
-    return render(context, locator<S>());
+    } else {
+      return render(context, locator<S>());
+    }
   }
 
   /// Method to render the UI, to be implemented by subclasses.
