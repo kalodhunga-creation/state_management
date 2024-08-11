@@ -7,7 +7,7 @@ class ViewModel extends ChangeNotifier {
   /// The context of the view.
   late BuildContext context;
 
-  final _observablesSubcriptions = Map<Observable, StreamSubscription>();
+  final _observablesSubcriptions = <Observable, StreamSubscription>{};
 
   bool _disposed = false;
   bool get disposed => _disposed;
