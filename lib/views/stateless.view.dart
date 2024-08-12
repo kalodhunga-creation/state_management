@@ -26,13 +26,15 @@ abstract class StatelessViewWithSharedVm<S extends ViewModel>
 
   final bool reactive;
 
+  S provideSharedViewModel();
+
   /// Provides the ViewModel instance.
 
   @override
   Widget build(BuildContext context) {
     if (reactive) {
       return ChangeNotifierProvider.value(
-        value: locator<S>(),
+        value: provideSharedViewModel(),
         child: Consumer<S>(
           builder: (context, vm, child) {
             return render(context, vm);
@@ -40,7 +42,7 @@ abstract class StatelessViewWithSharedVm<S extends ViewModel>
         ),
       );
     } else {
-      return render(context, locator<S>());
+      return render(context, provideSharedViewModel());
     }
   }
 
@@ -62,8 +64,12 @@ abstract class StatelessViewWithSharedVmCurrentVM<S extends ViewModel,
   @override
   Widget build(BuildContext context) {
     if (reactiveShared) {
-      return ChangeNotifierProvider.value(
-        value: locator<S>(),
+      return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<S>.value(
+            value: provideSharedViewModel(),
+          ),
+        ],
         child: Consumer<S>(
           builder: (context, sharedVm, child) {
             return render(context, sharedVm,
@@ -72,9 +78,34 @@ abstract class StatelessViewWithSharedVmCurrentVM<S extends ViewModel,
         ),
       );
     }
-    return render(context, locator<S>(),
+    return render(context, provideSharedViewModel(),
         Provider.of<T>(context, listen: reactiveCurrent));
   }
 
   Widget render(BuildContext context, S sharedVm, T currentVm);
+
+  S provideSharedViewModel();
+}
+
+class SharedVM<S extends ViewModel> extends StatelessWidget {
+  final bool? reactive;
+  final Widget Function(BuildContext context, S vm) builder;
+
+  const SharedVM({super.key, this.reactive = false, required this.builder});
+
+  @override
+  Widget build(BuildContext context) {
+    if (reactive!) {
+      return ChangeNotifierProvider.value(
+        value: locator<S>(),
+        child: Consumer<S>(
+          builder: (context, sharedVm, child) {
+            return builder(context, sharedVm);
+          },
+        ),
+      );
+    } else {
+      return builder(context, locator<S>());
+    }
+  }
 }

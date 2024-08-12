@@ -4,6 +4,10 @@ A new Flutter project.
 
 ## Getting Started
 
+```bash
+flutter pub cache clean
+flutter pub cache repair
+```
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:

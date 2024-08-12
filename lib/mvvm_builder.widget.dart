@@ -150,5 +150,3 @@ class MVVMBuilderProps<T extends ViewModel> extends MVVMBaseProps<T> {
     required bool disposeVM,
   }) : super(viewModel: viewModel, disposeVM: disposeVM);
 }
-
-//TODO MAke instance of shared vm;;
